@@ -3,12 +3,13 @@ package com.zalizniak;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.function.IntFunction;
-import java.util.function.Predicate;
-import java.util.function.ToLongBiFunction;
+import java.util.function.*;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class LambdaTest {
 
@@ -50,5 +51,41 @@ public class LambdaTest {
 
         ToLongBiFunction<Long, Long> toLongBiFn = (a, b) -> a + b;
         Assert.assertEquals(3, toLongBiFn.applyAsLong(1L, 2L));
+    }
+
+    @Test
+    public void testSupplier() {
+        Supplier<Double> lazyValue = () -> 9d;
+        Assert.assertEquals(9d, lazyValue.get(), 0.0);
+
+        // Fib
+        int[] fibs = {0, 1};
+        Stream<Integer> fibonacci = Stream.generate(() -> {
+            int result = fibs[1];
+            int fib3 = fibs[0] + fibs[1];
+            fibs[0] = fibs[1];
+            fibs[1] = fib3;
+            return result;
+        });
+    }
+
+    @Test
+    public void testConsumer() {
+        Consumer<String> consumer = System.out::println;
+        consumer.accept("abc");
+
+        Stream.of("111", "222", "333").parallel().forEach(consumer);
+    }
+
+    @Test
+    public void tesOperator() {
+
+        // UnaryOperator
+        List<String> names = Arrays.asList("bob", "josh", "megan");
+        names.replaceAll(name -> name.toUpperCase());
+        System.out.println(names);
+
+        // BinaryOperator is a reduction operation
+        Assert.assertEquals(15, IntStream.of(1, 2, 3, 4, 5).reduce(0, (i1, i2) -> i1 + i2));
     }
 }

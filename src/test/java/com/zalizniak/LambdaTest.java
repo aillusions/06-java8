@@ -3,8 +3,12 @@ package com.zalizniak;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.function.IntFunction;
 import java.util.function.Predicate;
+import java.util.function.ToLongBiFunction;
 
 public class LambdaTest {
 
@@ -34,7 +38,17 @@ public class LambdaTest {
         Assert.assertEquals("hello", fnTrim.apply(" hello "));
 
         // compose / andThen
-        Assert.assertEquals("hello", fnTrim.compose(a -> a.toString().replace(" h", "")).apply(" hello "));
-        Assert.assertEquals("ello", fnTrim.andThen(a -> a.replace(" h", "")).apply(" hello "));
+        Assert.assertEquals("ello", fnTrim.compose(a -> a.toString().replace(" h", "")).apply(" hello "));
+        Assert.assertEquals("hello", fnTrim.andThen(a -> a.replace(" h", "")).apply(" hello "));
+
+        // computeIfAbsent
+        Map<String, Integer> nameMap = new HashMap<>();
+        Integer value = nameMap.computeIfAbsent("John", String::length);
+
+        IntFunction<String> intFn = Integer::toString;
+        Assert.assertEquals("111", intFn.apply(111));
+
+        ToLongBiFunction<Long, Long> toLongBiFn = (a, b) -> a + b;
+        Assert.assertEquals(3, toLongBiFn.applyAsLong(1L, 2L));
     }
 }

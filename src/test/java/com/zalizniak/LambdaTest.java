@@ -59,14 +59,16 @@ public class LambdaTest {
         Assert.assertEquals(9d, lazyValue.get(), 0.0);
 
         // Fib
-        int[] fibs = {0, 1};
-        Stream<Integer> fibonacci = Stream.generate(() -> {
-            int result = fibs[1];
-            int fib3 = fibs[0] + fibs[1];
+        long[] fibs = {0, 1};
+        Stream<Long> fibonacci = Stream.generate(() -> {
+            long result = fibs[1];
+            long fib3 = fibs[0] + fibs[1];
             fibs[0] = fibs[1];
             fibs[1] = fib3;
             return result;
         });
+
+        fibonacci.limit(50).forEach(System.out::println);
     }
 
     @Test

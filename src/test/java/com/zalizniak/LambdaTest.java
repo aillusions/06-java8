@@ -28,7 +28,13 @@ public class LambdaTest {
 
     @Test
     public void testFunction() {
-        Function<String, String> fnTrim = in -> in.trim();
+        Function<String, String> fnTrim = String::trim;
+
+        // apply
         Assert.assertEquals("hello", fnTrim.apply(" hello "));
+
+        // compose / andThen
+        Assert.assertEquals("hello", fnTrim.compose(a -> a.toString().replace(" h", "")).apply(" hello "));
+        Assert.assertEquals("ello", fnTrim.andThen(a -> a.replace(" h", "")).apply(" hello "));
     }
 }

@@ -13,6 +13,45 @@ import java.util.stream.IntStream;
 
 public class CompletableFutureTest {
 
+    @Test
+    public void testAsyncNotAsync() throws InterruptedException, ExecutionException {
+
+        System.out.println("0 " + Thread.currentThread().getName());
+
+        CompletableFuture<Integer> future1 = CompletableFuture.supplyAsync(() -> {
+            System.out.println("1 " + Thread.currentThread().getName());
+            return 42;
+        });
+
+        CompletableFuture<String> future2 = future1.thenApplyAsync(i -> {
+            System.out.println("2 " + Thread.currentThread().getName());
+            return i.toString();
+        });
+
+   /*     CompletableFuture<String> future3 = future2.thenComposeAsync((v) -> {
+            System.out.println("5 " + Thread.currentThread().getName());
+
+        });*/
+
+        CompletableFuture<Void> future4 = future2.thenAcceptAsync((v) -> {
+            System.out.println("4 " + Thread.currentThread().getName());
+        });
+
+        CompletableFuture<Void> future5 = future2.thenRun(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("5 " + Thread.currentThread().getName());
+        });
+
+        System.out.println("6 " + Thread.currentThread().getName());
+
+        //future4.get();
+        Thread.sleep(3000);
+    }
+
     public Future<String> calculateAsync() {
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
 

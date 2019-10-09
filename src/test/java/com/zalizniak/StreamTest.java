@@ -22,6 +22,14 @@ public class StreamTest {
         return IntStream.rangeClosed(1, n + 1).reduce((x, y) -> x * y).getAsInt();
     }
 
+    //
+    public List<Integer> fibonacci(Integer series) {
+        return Stream.iterate(new int[]{0, 1}, i -> new int[]{i[1], i[0] + i[1]})
+                .limit(series)
+                .map(i -> i[0])
+                .collect(Collectors.toList());
+    }
+
     @Test
     public void lazy() {
 

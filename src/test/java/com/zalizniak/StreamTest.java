@@ -61,4 +61,20 @@ public class StreamTest {
 
         Assert.assertEquals(Arrays.asList(2, 3, 4, 5), together);
     }
+
+    @Test
+    public void testError() {
+
+        try {
+            IntStream.of(1, 2, 3, 4, 5)
+                    .boxed()
+                    .filter(i -> i >= 2 && i <= 4)
+                    .map(i -> {
+                        throw new RuntimeException("Ooops...");
+                    })
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            System.out.println("Error happened: " + e);
+        }
+    }
 }
